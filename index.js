@@ -7,5 +7,5 @@ app.use("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server on ${PORT}`);
+  console.log(`server on ${PORT}`)
 });
