@@ -12,13 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Contents.belongsTo(models.Users, {
         foreignKey: "fk_userId",
-        // as: "users",
-        // onDelete: "cascade",
       });
       models.Contents.hasMany(models.Comments, {
         foreignKey: "fk_contentId",
         as: "comments",
-        // onDelete: "cascade",
       });
       models.Contents.belongsToMany(models.Tags, {
         foreignKey: "contentId",
