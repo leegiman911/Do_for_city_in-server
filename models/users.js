@@ -1,4 +1,5 @@
 "use strict";
+const crypto = require("crypto");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
@@ -12,12 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       models.Users.hasMany(models.Contents, {
         foreignKey: "fk_userId",
         as: "contents",
-        // onDelete: "cascade",
       });
       models.Users.hasMany(models.Comments, {
         foreignKey: "fk_userId",
         as: "comments",
-        // onDelete: "cascade",
       });
       models.Users.belongsToMany(models.Tags, {
         foreignKey: "userId",
@@ -34,10 +33,19 @@ module.exports = (sequelize, DataTypes) => {
       photo: DataTypes.STRING,
     },
     {
+      hooks: {
+        afterValidate: (data, options) => {
+          let secret1 = "도시인화이팅";
+          const hash = crypto.createHmac("sha1", secret1);
+          hash.update(data.password);
+          // console.log("해쉬 전 비번확인", data.password);
+          data.password = hash.digest("hex");
+          // console.log("해쉬 후 비번확인", data.password);
+        },
+      },
       sequelize,
       modelName: "Users",
     }
   );
-
   return Users;
 };
