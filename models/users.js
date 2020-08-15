@@ -1,4 +1,5 @@
 "use strict";
+const crypto = require("crypto");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
@@ -34,6 +35,16 @@ module.exports = (sequelize, DataTypes) => {
       photo: DataTypes.STRING,
     },
     {
+      hooks: {
+        afterValidate: (data, options) => {
+          let secret1 = "도시인화이팅";
+          const hash = crypto.createHmac("sha1", secret1);
+          hash.update(data.password);
+          // console.log("전", data.password);
+          data.password = hash.digest("hex");
+          // console.log("후", data.password);
+        },
+      },
       sequelize,
       modelName: "Users",
     }
@@ -41,3 +52,22 @@ module.exports = (sequelize, DataTypes) => {
 
   return Users;
 };
+
+// class User extends Model {}
+// User.init({
+//   username: DataTypes.STRING,
+//   mood: {
+//     type: DataTypes.ENUM,
+//     values: ['happy', 'sad', 'neutral']
+//   }
+// }, {
+//   hooks: {
+//     beforeValidate: (user, options) => {
+//       user.mood = 'happy';
+//     },
+//     afterValidate: (user, options) => {
+//       user.username = 'Toni';
+//     }
+//   },
+//   sequelize
+// });
