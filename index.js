@@ -38,15 +38,12 @@ app.post("/signin", (req, res) => {
   db.Users.findOne({ where: { userId: req.body.userId } }).then((checkUser) => {
     if (checkUser) {
       if (checkUser.password === passwordHashed) {
-        req.session.regenerate((err) => {
-          if (err) {
-            res.status(404).send("session 다시 만들기 실패");
-          }
-          const session_id = req.session;
-          session_id.userId = checkUser.id;
-          res.setHeader("Set-Cookie", session_id);
-          res.status(201).send({ id: checkUser.id });
-        });
+        // session 객체에 유저 id 추가
+        req.session.session_id = checkUser.id;
+        // 해당 session을 저장, 보내주기
+        if (req.session.session_id) {
+          res.status(200).send({ id: checkUser.id });
+        }
       } else {
         res.status(404).send("비밀번호가 틀렸습니다.");
       }
@@ -102,6 +99,27 @@ app.get("/contents", (req, res) => {
       res.status(404).send("잘못된 경로입니다 확인후 시도해주시기 바랍니다.");
     }
   });
+});
+
+// 회원정보 마이페이지 요청
+app.get("/mypage", (req, res) => {
+  // 저장된 세션아이디 확인
+  if (req.session.session_id) {
+    db.Users.findAll({
+      where: { id: req.session.session_id },
+      attributes: ["userId"],
+      include: [
+        { model: db.Contents, as: "contents", attributes: ["title"] },
+        { model: db.Comments, as: "comments", attributes: ["comment"] },
+      ],
+    }).then((userInfo) => {
+      if (userInfo) {
+        res.status(200).send(userInfo);
+      }
+    });
+  } else {
+    res.status(404).send("잘못 요청하셨습니다.");
+  }
 });
 
 // 404코드 처리는 이후에 진행합니다.
