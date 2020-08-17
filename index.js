@@ -72,6 +72,7 @@ app.post("/signup", (req, res) => {
     }
   );
 });
+
 // 회원가입 아이디 중복확인 요청
 app.post("/signup/checkid", (req, res) => {
   db.Users.findOne({ where: { userId: req.body.userId } }).then((checkId) => {
@@ -84,31 +85,24 @@ app.post("/signup/checkid", (req, res) => {
 });
 
 // 게시판 정보 요청
-app.get("/Contents", (req, res) => {
-  const { title, content, referenceFile } = req.body;
+app.get("/contents", (req, res) => {
   db.Contents.findAll({
-    where: { title: title, content: content, referenceFile: referenceFile },
-  }).then((Content) => {
-    if (Content) {
-      res.status(200).json(Content);
+    attributes: ["title", "createdAt"],
+    include: [
+      {
+        model: db.Users,
+        as: "contents",
+        attributes: ["userId"],
+      },
+    ],
+  }).then((AllContents) => {
+    if (AllContents) {
+      res.status(200).json(AllContents);
     } else {
       res.status(404).send("잘못된 경로입니다 확인후 시도해주시기 바랍니다.");
     }
   });
 });
-
-// 게시글 작성 요청 // 작성중
-// app.post("/contents/post", (req, res) => {
-//   console.log(req.body);
-//   console.log(req.session);
-
-//   res.status(404).send("test중");
-//   // db.Contents.create({
-//   //   title: req.body.title,
-//   //   content: req.body.conten,
-//   //   referenceFile: req.body.referenceFile,
-//   // });
-// });
 
 // 404코드 처리는 이후에 진행합니다.
 //404코드 보내는 미들웨어
