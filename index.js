@@ -43,12 +43,8 @@ app.post("/signin", (req, res) => {
             res.status(404).send("session 다시 만들기 실패");
           }
           const session_id = req.session;
-          console.log(req.session);
           session_id.userId = checkUser.id;
-          console.log(session_id);
           res.setHeader("Set-Cookie", session_id);
-          console.log(req.headers.cookie);
-          console.log(session_id);
           res.status(201).send({ id: checkUser.id });
         });
       } else {
