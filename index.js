@@ -128,8 +128,7 @@ app.post("/contents/post", (req, res) => {
       if(req.session.session_id) {
         db.Contents.create({
           title: req.body.title,
-          content: req.body.content,
-          referenceFile: req.body.referenceFile,
+          content: req.body.content
         }).then((post)=>{
           if(post){
             req.status(200).json(post)
