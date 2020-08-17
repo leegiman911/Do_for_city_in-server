@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "lsy067300!",
+    "password": null,
     "database": "db_DOSIIN_dev",
     "host": "127.0.0.1",
     "dialect": "mysql"
