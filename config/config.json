@@ -7,10 +7,10 @@
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "admin",
+    "password": "dosiin12",
+    "database": "DO_SI_IN",
+    "host": "dosiin.czfhnk0qkhgc.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql"
   },
   "production": {
