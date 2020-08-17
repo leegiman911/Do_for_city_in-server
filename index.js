@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const db = require("./models");
 const crypto = require("crypto");
-
+const Sequelize = require('sequelize');
 const app = express();
 const PORT = 5000;
 
@@ -16,8 +16,16 @@ app.use(
     resave: false,
     saveUninitialized: true,
   })
-);
-
+  );
+  
+  app.options("/signup", (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers',
+      'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.send();
+  });
+  
 app.post("/signin", (req, res) => {
   // 로그인 요청시 입력된 비밀번호를 헤싱합니다.
   let secret1 = "도시인화이팅";
@@ -66,11 +74,32 @@ app.post("/signup", (req, res) => {
   );
 });
 
+
+
+app.get("/Contents", (req, res) => {
+  console.log(req.body)
+  const {title ,content,referenceFile} = req.body;
+  db.Contents.findAll({where :{title:title,content: content,referenceFile: referenceFile}}).then(
+    (Content) =>{
+     if (Content){
+       console.log(Content)
+      res.status(200).json(Content);
+     }else{
+      res
+      .status(404)
+      .send(
+        "잘못된 경로입니다 확인후 시도해주시기 바랍니다."
+        );
+     }
+    }
+    )
+})
 // 404코드 처리는 이후에 진행합니다.
 //404코드 보내는 미들웨어
 // app.use(function (req, res, next) {
 //   res.sendStatus(404);
 // });
+
 
 app.listen(PORT, () => {
   console.log(`server on ${PORT}`);
