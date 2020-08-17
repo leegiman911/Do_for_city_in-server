@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       models.Contents.hasMany(models.Comments, {
         foreignKey: "fk_contentId",
-        as: "comments",
+        as: "commentsContent",
       });
       models.Contents.belongsToMany(models.Tags, {
         foreignKey: "contentId",

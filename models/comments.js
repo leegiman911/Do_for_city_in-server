@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       models.Comments.belongsTo(models.Contents, {
         foreignKey: "fk_contentId",
+        as: "commentsContent",
       });
     }
   }
