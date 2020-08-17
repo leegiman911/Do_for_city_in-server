@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const db = require("./models");
 const crypto = require("crypto");
-const Sequelize = require('sequelize');
 const app = express();
 const PORT = 5000;
 
@@ -77,12 +76,10 @@ app.post("/signup", (req, res) => {
 
 
 app.get("/Contents", (req, res) => {
-  console.log(req.body)
   const {title ,content,referenceFile} = req.body;
   db.Contents.findAll({where :{title:title,content: content,referenceFile: referenceFile}}).then(
     (Content) =>{
      if (Content){
-       console.log(Content)
       res.status(200).json(Content);
      }else{
       res
