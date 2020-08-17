@@ -37,7 +37,6 @@ app.post("/signin", (req, res) => {
 
   db.Users.findOne({ where: { userId: req.body.userId } }).then((checkUser) => {
     if (checkUser) {
-      console.log(checkUser);
       if (checkUser.password === passwordHashed) {
         // session 객체에 유저 id 추가
         req.session.session_id = checkUser.id;
@@ -130,7 +129,7 @@ app.post("/contents/post", (req, res) => {
       content: req.body.content,
     }).then((post) => {
       if (post) {
-        req.status(200).json(post);
+        res.status(200).json();
       }
     });
   } else {
@@ -170,21 +169,16 @@ app.get("/contentDetail", (req, res) => {
     res.status(400).send("잘못 요청하셨습니다.");
   }
 });
-
-app.post("/contents/post", (req, res) => {
-  if (req.session.session_id) {
-    db.Contents.create({
-      title: req.body.title,
-      content: req.body.content,
-    }).then((post) => {
-      if (post) {
-        req.status(200).json(post);
-      }
-    });
-  } else {
-    res.status(404).send("잘못된 요청입니다 확인후 시도해주시기 바랍니다.");
+// 댓글 작성 api
+app.post("/comments", (req, res)=> {
+  if(req.session.session_id){
+    db.Comments.create({
+      comment:req.body.comment
+    }).then((comment) => res.status(201).json(comment))
+  }else{
+    req.status(404).send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.")
   }
-});
+})
 
 // 404코드 처리는 이후에 진행합니다.
 //404코드 보내는 미들웨어
