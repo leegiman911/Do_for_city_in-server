@@ -373,7 +373,6 @@ app.get("/contents/search", (req, res) => {
       }}).then((titles) => {
         if(titles){
           {
-            console.log(titles)
             // 클라이언트 측에서 body에 title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
             db.Contents.findAll({
               where: {
@@ -394,8 +393,6 @@ app.get("/contents/search", (req, res) => {
             }).then((contentDetail) => {
                 res.status(200).send(contentDetail)})
           } 
-        }else{
-          res.status(404).send('[]')
         }
       })
 }
