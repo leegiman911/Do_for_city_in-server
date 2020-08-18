@@ -110,7 +110,11 @@ app.get("/mypage", (req, res) => {
       attributes: ["userId"],
       include: [
         { model: db.Contents, as: "contents", attributes: ["title"] },
-        { model: db.Comments, as: "comments", attributes: ["comment"] },
+        {
+          model: db.Comments,
+          as: "comments",
+          attributes: ["comment", "fk_contentId"],
+        },
       ],
     }).then((userInfo) => {
       if (userInfo) {
@@ -288,6 +292,34 @@ app.post("/mypage/toContent", (req, res) => {
       where: {
         title: req.body.title,
         fk_userId: req.session.session_id,
+      },
+      attributes: ["title", "content", "createdAt"],
+      include: [
+        { model: db.Users, as: "contents", attributes: ["userId"] },
+        {
+          model: db.Comments,
+          as: "commentsContent",
+          attributes: ["comment", "createdAt"],
+          include: [
+            { model: db.Users, as: "comments", attributes: ["userId"] },
+          ],
+        },
+      ],
+    }).then((content) => {
+      res.status(201).send(content);
+    });
+  } else {
+    res.status(404).send("요청하신 정보가 없습니다.");
+  }
+});
+
+// 마이페이지에서 내가 쓴 댓글이 해당하는 게시글로 이동 요청
+app.post("/mypage/toComment", (req, res) => {
+  if (req.session.session_id) {
+    // 클라이언트 측에서 body에 해당 댓글의 comment와 fk_contentId를 담아서 요청을 보낼 것이다.
+    db.Contents.findAll({
+      where: {
+        id: req.body.fk_contentId,
       },
       attributes: ["title", "content", "createdAt"],
       include: [
