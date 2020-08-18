@@ -130,7 +130,9 @@ app.post("/contents/post", (req, res) => {
       content: req.body.content,
     }).then((post) => {
       if (post) {
+
         res.status(200).send("ok");
+
       }
     });
   } else {
@@ -178,6 +180,18 @@ app.get("/contentDetail", (req, res) => {
 //   // res.status(201).send("ok");
 //   res.redirect("/signin");
 // });
+
+// 댓글 작성 api
+app.post("/comments", (req, res)=> {
+  if(req.session.session_id){
+    db.Comments.create({
+      comment:req.body.comment
+    }).then((comment) => res.status(201).json(comment))
+  }else{
+    req.status(404).send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.")
+  }
+})
+
 
 // 404코드 처리는 이후에 진행합니다.
 //404코드 보내는 미들웨어
