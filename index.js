@@ -394,6 +394,8 @@ app.get("/contents/search", (req, res) => {
             }).then((contentDetail) => {
                 res.status(200).send(contentDetail)})
           } 
+        }else{
+          res.status(404).send('[]')
         }
       })
 }
