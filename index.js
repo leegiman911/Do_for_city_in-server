@@ -171,9 +171,8 @@ app.get("/contentDetail", (req, res) => {
   }
 });
 
-// // 로그아웃 요청
+// 로그아웃 요청
 app.post("/signout", (req, res) => {
-  console.log("???", req.session);
   req.session.destroy();
   res.status(200).send("로그아웃 되셨습니다.");
 });
@@ -191,11 +190,25 @@ app.post("/comments", (req, res) => {
   }
 });
 
-// 404코드 처리는 이후에 진행합니다.
-//404코드 보내는 미들웨어
-// app.use(function (req, res, next) {
-//   res.sendStatus(404);
-// });
+// 회원정보 수정 요청
+app.put("/mypage/setup", (req, res) => {
+  if (req.session.session_id) {
+    db.Users.update(
+      {
+        userId: req.body.userId,
+        password: req.body.password,
+        email: req.body.email,
+      },
+      { where: { id: req.session.session_id } }
+    ).then((modified) => {
+      res.status(201).send(modified);
+    });
+  } else {
+    res.status(404).send("잘못 요청하셨습니다. 다시 시도해 주시기 바랍니다.");
+  }
+});
+
+// 회원정보 수정을 위한 마이페이지 요청 // 작성중
 
 app.listen(PORT, () => {
   console.log(`server on ${PORT}`);
