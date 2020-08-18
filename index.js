@@ -235,6 +235,39 @@ app.put("/mypage/setup", (req, res) => {
             res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
           }
         });
+
+      }
+    );
+  } else {
+    res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
+  }
+});
+
+// 댓글 수정 요청 (게시판 상세 페이지)
+app.put("/contents/comment/update", (req, res) => {
+  // 해당 댓글을 수정 (클라이언트가 선택한) 작성자와 작성시간을 기준으로 잡는다.
+  if (req.session.session_id) {
+    db.Users.findOne({ where: { id: req.session.session_id } }).then(
+      (userData) => {
+        if (userData.userId === req.body.userId) {
+          db.Comments.findOne({
+            where: { fk_userId: userData.id, createdAt: req.body.createdAt },
+          }).then((commentData) => {
+            db.Comments.update(
+              { comment: req.body.comment },
+              { where: { id: commentData.id } }
+            ).then((result) => {
+              res.status(200).send(result);
+            });
+          });
+        } else {
+          res.status(404).send("잘못된 요청입니다.");
+        }
+      }
+    );
+  }
+});
+
         // 댓글 작성 api
         app.post("/comments", (req, res) => {
           if (req.session.session_id) {
@@ -256,3 +289,8 @@ app.put("/mypage/setup", (req, res) => {
           console.log(`server on ${PORT}`);
         });
         
+
+app.listen(PORT, () => {
+  console.log(`server on ${PORT}`);
+});
+
