@@ -128,6 +128,7 @@ app.post("/contents/post", (req, res) => {
     db.Contents.create({
       title: req.body.title,
       content: req.body.content,
+      fk_userId: req.session.session_id
     }).then((post) => {
       if (post) {
         res.status(200).send("ok");
@@ -177,18 +178,6 @@ app.post("/signout", (req, res) => {
   res.status(200).send("로그아웃 되셨습니다.");
 });
 
-// 댓글 작성 api
-app.post("/comments", (req, res) => {
-  if (req.session.session_id) {
-    db.Comments.create({
-      comment: req.body.comment,
-    }).then((comment) => res.status(201).json(comment));
-  } else {
-    req
-      .status(404)
-      .send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.");
-  }
-});
 
 // 회원정보 수정 요청
 app.put("/mypage/setup", (req, res) => {
@@ -200,53 +189,70 @@ app.put("/mypage/setup", (req, res) => {
         email: req.body.email,
       },
       { where: { id: req.session.session_id } }
-    ).then((modified) => {
-      res.status(201).send(modified);
-    });
-  } else {
-    res.status(404).send("잘못 요청하셨습니다. 다시 시도해 주시기 바랍니다.");
-  }
-});
-
-// 회원정보 수정을 위한 마이페이지 요청
-app.get("/mypage/setup", (req, res) => {
-  if (req.session.session_id) {
-    db.Users.findOne({ where: { id: req.session.session_id } }).then(
-      (userData) => {
-        if (userData) {
-          res.status(200).send(userData);
+      ).then((modified) => {
+        res.status(201).send(modified);
+      });
+    } else {
+      res.status(404).send("잘못 요청하셨습니다. 다시 시도해 주시기 바랍니다.");
+    }
+  });
+  
+  // 회원정보 수정을 위한 마이페이지 요청
+  app.get("/mypage/setup", (req, res) => {
+    if (req.session.session_id) {
+      db.Users.findOne({ where: { id: req.session.session_id } }).then(
+        (userData) => {
+          if (userData) {
+            res.status(200).send(userData);
+          }
         }
+        );
+      } else {
+        res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
       }
-    );
-  } else {
-    res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
-  }
-});
-
-// 회원 탈퇴 요청
-app.patch("/mypage/leave", (req, res) => {
-  const deleted = "deleted";
-  if (req.session.session_id) {
-    db.Users.findOne({ where: { id: req.session.session_id } }).then(
-      (userData) => {
-        db.Users.update(
-          {
-            userId: deleted,
-            email: userData.email,
-            password: userData.password,
-          },
-          { where: { id: req.session.session_id } }
-        ).then((result) => {
-          req.session.destroy();
-          res.status(200).send(result);
+    });
+    
+    // 회원 탈퇴 요청
+    app.patch("/mypage/leave", (req, res) => {
+      const deleted = "deleted";
+      if (req.session.session_id) {
+        db.Users.findOne({ where: { id: req.session.session_id } }).then(
+          (userData) => {
+            db.Users.update(
+              {
+                userId: deleted,
+                email: userData.email,
+                password: userData.password,
+              },
+              { where: { id: req.session.session_id } }
+              ).then((result) => {
+                req.session.destroy();
+                res.status(200).send(result);
+              });
+            }
+            );
+          } else {
+            res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
+          }
         });
-      }
-    );
-  } else {
-    res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`server on ${PORT}`);
-});
+        // 댓글 작성 api
+        app.post("/comments", (req, res) => {
+          if (req.session.session_id) {
+            db.Contents.findOne({where :{id : req.body.id}}).then(
+              console.log(req.body),
+              (contentid) => {
+                db.Comments.create({
+                  comment: req.body.comment,
+                  fk_userId: req.session.session_id,
+                  fk_contentId : contentid.commentsContent
+                }).then((comment) => res.status(201).send(ok));
+              })
+          } else {
+            res.status(404).send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.");
+          }
+        });
+        
+        app.listen(PORT, () => {
+          console.log(`server on ${PORT}`);
+        });
+        
