@@ -42,7 +42,7 @@ app.post("/signin", (req, res) => {
         req.session.session_id = checkUser.id;
         // 해당 session을 저장, 보내주기
         if (req.session.session_id) {
-          res.status(200).send({ id: checkUser.id });
+          res.status(201).send({ id: checkUser.id });
         }
       } else {
         res.status(404).send("비밀번호가 틀렸습니다.");
@@ -94,7 +94,6 @@ app.get("/contents", (req, res) => {
     ],
   }).then((AllContents) => {
     if (AllContents) {
-      console.log("게시판 정보: ", AllContents);
       res.status(200).send(AllContents);
     } else {
       res.status(404).send("잘못된 경로입니다 확인후 시도해주시기 바랍니다.");
@@ -123,6 +122,7 @@ app.get("/mypage", (req, res) => {
   }
 });
 
+// 게시글 작성 요청
 app.post("/contents/post", (req, res) => {
   if (req.session.session_id) {
     db.Contents.create({
@@ -130,9 +130,7 @@ app.post("/contents/post", (req, res) => {
       content: req.body.content,
     }).then((post) => {
       if (post) {
-
         res.status(200).send("ok");
-
       }
     });
   } else {
@@ -169,29 +167,29 @@ app.get("/contentDetail", (req, res) => {
       }
     });
   } else {
-    res.status(400).send("잘못 요청하셨습니다.");
+    res.status(404).send("잘못 요청하셨습니다.");
   }
 });
 
-// // 로그아웃 요청 // 작성중입니다.
-// app.post("signout", (req, res) => {
-//   console.log("???", req.session);
-//   req.session.destroy();
-//   // res.status(201).send("ok");
-//   res.redirect("/signin");
-// });
+// // 로그아웃 요청
+app.post("/signout", (req, res) => {
+  console.log("???", req.session);
+  req.session.destroy();
+  res.status(200).send("로그아웃 되셨습니다.");
+});
 
 // 댓글 작성 api
-app.post("/comments", (req, res)=> {
-  if(req.session.session_id){
+app.post("/comments", (req, res) => {
+  if (req.session.session_id) {
     db.Comments.create({
-      comment:req.body.comment
-    }).then((comment) => res.status(201).json(comment))
-  }else{
-    req.status(404).send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.")
+      comment: req.body.comment,
+    }).then((comment) => res.status(201).json(comment));
+  } else {
+    req
+      .status(404)
+      .send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.");
   }
-})
-
+});
 
 // 404코드 처리는 이후에 진행합니다.
 //404코드 보내는 미들웨어
