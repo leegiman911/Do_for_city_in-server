@@ -128,10 +128,10 @@ app.post("/contents/post", (req, res) => {
     db.Contents.create({
       title: req.body.title,
       content: req.body.content,
-      fk_userId: req.session.session_id
+      fk_userId: req.session.session_id,
     }).then((post) => {
       if (post) {
-        res.status(200).send("ok");
+        res.status(200).send(post);
       }
     });
   } else {
@@ -177,7 +177,6 @@ app.post("/signout", (req, res) => {
   req.session.destroy();
   res.status(200).send("로그아웃 되셨습니다.");
 });
-
 
 // 회원정보 수정 요청
 app.put("/mypage/setup", (req, res) => {
@@ -236,8 +235,6 @@ app.patch("/mypage/leave", (req, res) => {
   }
 });
 
-
-
 // 댓글 수정 요청 (게시판 상세 페이지)
 app.put("/contents/comment/update", (req, res) => {
   // 해당 댓글을 수정 (클라이언트가 선택한) 작성자와 작성시간을 기준으로 잡는다.
@@ -263,27 +260,26 @@ app.put("/contents/comment/update", (req, res) => {
   }
 });
 
-// 댓글 작성 api
+// 댓글 작성 요청
 app.post("/comments", (req, res) => {
+  // 해당 게시글에 대한 댓글을 작성
+  // 해당 게시글에 대한 정보로 req.body에 해당 게시글의 title과 createdAt으로 받는다.
   if (req.session.session_id) {
-    db.Contents.findOne({ where: { id: req.body.id } }).then(
-      console.log(req.body),
-      (contentid) => {
-        db.Comments.create({
-          comment: req.body.comment,
-          fk_userId: req.session.session_id,
-          fk_contentId: contentid.commentsContent
-        }).then((comment) => res.status(201).send(ok));
-      });
+    db.Contents.findOne({
+      where: { title: req.body.title, createdAt: req.body.createdAt },
+    }).then((contentData) => {
+      console.log(contentData);
+      db.Comments.create({
+        comment: req.body.comment,
+        fk_userId: req.session.session_id,
+        fk_contentId: contentData.id,
+      }).then((result) => res.status(201).send(result));
+    });
   } else {
-    res.status(404).send("잘못된 요청입니다 확인후 다시 시도해주시기 바랍니다.");
+    res.status(404).send("잘못된 요청입니다.");
   }
 });
 
 app.listen(PORT, () => {
   console.log(`server on ${PORT}`);
 });
-
-
-
-
