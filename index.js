@@ -269,20 +269,6 @@ app.put("/contents/comment/update", (req, res) => {
         }
       }
     );
-
-    //   db.Comments.findOne({
-    //     where: {
-    //       // fk_userId: req.session.session_id,
-    //       createdAt: req.body.createdAt,
-    //     },
-    //   }).then((commentData) => {
-    //     if (commentData) {
-    //       console.log(commentData);
-    //       res.status(200).send(commentData);
-    //     }
-    //   });
-    // } else {
-    //   res.status(404).send("잘못된 요청입니다. 다시 시도해 주시기 바랍니다.");
   }
 });
 
