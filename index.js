@@ -149,8 +149,8 @@ app.get("/contentDetail", (req, res) => {
     // 클라이언트 측에서 body에 title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
     db.Contents.findAll({
       where: {
-        title: req.body.title,
-        createdAt: req.body.createdAt,
+        title: req.body.data.title,
+        createdAt: req.body.data.createdAt,
       },
       attributes: ["title", "content", "createdAt", "id"],
       include: [
@@ -364,12 +364,12 @@ app.put("/contents/update", (req, res) => {
   }
 });
 
-// 게시글 검색 api
+게시글 검색 api
 app.get("/contents/search", (req, res) => {
   if (req.session.session_id) {
     db.Contents.findAll({
       where: {
-        title: req.body.title
+        title: req.body.data.title
       },
       attributes: ["title", "content", "createdAt"],
       include: [
