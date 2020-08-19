@@ -376,7 +376,7 @@ app.get("/contents/search", (req, res) => {
             // 클라이언트 측에서 body에 title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
             db.Contents.findAll({
               where: {
-                title: req.body.title,
+                title: req.body.title
               },
               attributes: ["title", "content", "createdAt"],
               include: [
@@ -391,10 +391,10 @@ app.get("/contents/search", (req, res) => {
                 },
               ],
             }).then((contentDetail) => {
-                res.status(200).send(contentDetail)})
+                res.status(200).send(contentDetail)}).catch(err => console.log(err))
           } 
         }
-      })
+      }).catch(err => console.log(err))
 }
 })
 
