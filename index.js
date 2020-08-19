@@ -366,37 +366,31 @@ app.put("/contents/update", (req, res) => {
 
 // 게시글 검색 api
 app.get("/contents/search", (req, res) => {
-  if(req.session.session_id){
+  if (req.session.session_id) {
     db.Contents.findAll({
       where: {
         title: req.body.title
-      }}).then((titles) => {
-        if(titles){
-          {
-            // 클라이언트 측에서 body에 title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
-            db.Contents.findAll({
-              where: {
-                title: req.body.title
-              },
-              attributes: ["title", "content", "createdAt"],
-              include: [
-                { model: db.Users, as: "contents", attributes: ["userId"] },
-                {
-                  model: db.Comments,
-                  as: "commentsContent",
-                  attributes: ["comment", "createdAt"],
-                  include: [
-                    { model: db.Users, as: "comments", attributes: ["userId"] },
-                  ],
-                },
-              ],
-            }).then((contentDetail) => {
-                res.status(200).send(contentDetail)}).catch(err => console.log(err))
-          } 
-        }
-      }).catch(err => console.log(err))
-}
+      },
+      attributes: ["title", "content", "createdAt"],
+      include: [
+        { model: db.Users, as: "contents", attributes: ["userId"] },
+        {
+          model: db.Comments,
+          as: "commentsContent",
+          attributes: ["comment", "createdAt"],
+          include: [
+            { model: db.Users, as: "comments", attributes: ["userId"] },
+          ],
+        },
+      ],
+    }).then((contentDetail) => {
+      res.status(200).send(contentDetail)
+    }).catch(err => console.log(err))
+  } else {
+    res.status(404).send('잘못된 요청입니다.')
+  }
 })
+
 
 app.listen(PORT, () => {
   console.log(`server on ${PORT}`);
