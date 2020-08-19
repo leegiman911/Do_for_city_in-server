@@ -364,7 +364,7 @@ app.put("/contents/update", (req, res) => {
   }
 });
 
-게시글 검색 api
+// 게시글 검색 api
 app.get("/contents/search", (req, res) => {
   if (req.session.session_id) {
     db.Contents.findAll({
