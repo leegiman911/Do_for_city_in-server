@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # DO.SI.IN-server
 
 ---
@@ -102,22 +102,4 @@ Back-end
 - GitGub : https://github.com/leegiman911
 - Gmail : giman979@gmail.com
 <!-- ## 이모지
->>>>>>> 9608f8f808b570cc8b5d5b7103e6334dd95742b9
 
-> 추가 :heavy_plus_sign:
-
-> 미완성 :soon:
-
-> 수정 :recycle:
-
-> 삭제 :no_entry_sign:
-
-> 머지 :hand:
-
-> 패키지 설치 :flags:
-
-<<<<<<< HEAD
-> 오류 발견 :imp:
-=======
-> 오류 발견 :imp: -->
->>>>>>> 9608f8f808b570cc8b5d5b7103e6334dd95742b9
