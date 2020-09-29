@@ -4,13 +4,13 @@ module.exports = {
   // 게시글 정보 API (게시글 상세 페이지)
   post: (req, res) => {
     if (req.session.session_id) {
-      // 클라이언트 측에서 body의 data에(axios get요청) title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
+      // 클라이언트 측에서 body의 data에(axios get요청) title과 createdAt를 같이 담아서 POST요청을 보낼 것이다.
       db.Contents.findAll({
         where: {
           title: req.body.title,
           createdAt: req.body.createdAt,
         },
-        attributes: ["title", "content", "createdAt", "id"],
+        attributes: ["title", "content", "referenceFile", "createdAt", "id"],
         include: [
           { model: db.Users, as: "contents", attributes: ["userId"] },
           {
