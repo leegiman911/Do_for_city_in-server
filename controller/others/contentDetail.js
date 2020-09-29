@@ -7,8 +7,8 @@ module.exports = {
       // 클라이언트 측에서 body의 data에(axios get요청) title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
       db.Contents.findAll({
         where: {
-          title: req.body.data.title,
-          createdAt: req.body.data.createdAt,
+          title: req.body.title,
+          createdAt: req.body.createdAt,
         },
         attributes: ["title", "content", "createdAt", "id"],
         include: [

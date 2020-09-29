@@ -10,8 +10,8 @@ module.exports = {
       }
 
       db.Contents.create({
-        title: data.title,
-        content: data.content,
+        title: req.body.title,
+        content: req.body.content,
         fk_userId: req.session.session_id,
         referenceFile: bin.location,
       }).then((post) => {

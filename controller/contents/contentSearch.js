@@ -6,7 +6,7 @@ module.exports = {
     if (req.session.session_id) {
       db.Contents.findAll({
         where: {
-          title: req.body.data.title,
+          title: req.body.title,
         },
         attributes: ["title", "content", "createdAt"],
         include: [
