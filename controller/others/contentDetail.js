@@ -2,7 +2,7 @@ const db = require("../../models");
 
 module.exports = {
   // 게시글 정보 API (게시글 상세 페이지)
-  get: (req, res) => {
+  post: (req, res) => {
     if (req.session.session_id) {
       // 클라이언트 측에서 body의 data에(axios get요청) title과 createdAt를 같이 담아서 GET요청을 보낼 것이다.
       db.Contents.findAll({

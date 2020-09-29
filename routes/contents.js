@@ -13,7 +13,7 @@ router.get("/", contentsController.contentInfo.get);
 router.put("/update", contentsController.contentUpdate.put);
 
 // 게시글 검색 요청
-router.get("/search", contentsController.contentSearch.get);
+router.post("/search", contentsController.contentSearch.post);
 
 // 댓글 수정 요청
 router.put("/comment/update", contentsController.commentUpdate.put);
