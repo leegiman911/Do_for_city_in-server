@@ -18,9 +18,7 @@ let upload = multer({
   }),
   // limits: { fileSize: 5 * 1024 * 1024 }, // 사진 용량제한두기
 });
-
 const singleUpload = upload.single("imgFile"); // 클라이언트 측에서 사진 className을 이렇게 설정해주기
-
 module.exports = {
   fileUploadMiddleware: (req, res, next) => {
     singleUpload(req, res, function (err) {

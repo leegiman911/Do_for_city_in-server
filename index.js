@@ -14,6 +14,13 @@ const othersRouter = require("./routes/others");
 app.use(bodyParser.json());
 app.use(cors());
 app.use(
+  cors({
+    allowedHeaders: "*",
+    method: ["GET", "POST", "DELETE", "PATCH"],
+    credentials: true,
+  })
+);
+app.use(
   session({
     secret: "dosiin",
     resave: false,

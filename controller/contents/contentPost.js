@@ -8,7 +8,6 @@ module.exports = {
       if (!bin) {
         bin = "";
       }
-
       db.Contents.create({
         title: req.body.title,
         content: req.body.content,
