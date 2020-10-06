@@ -4,7 +4,7 @@ const db = require("../../models");
 module.exports = {
   get: (req, res) => {
     db.Contents.findAll({
-      attributes: ["title", "createdAt"],
+      attributes: ["title", "referenceFile", "createdAt"],
       include: [
         {
           model: db.Users,

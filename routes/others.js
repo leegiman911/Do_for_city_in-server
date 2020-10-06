@@ -13,6 +13,6 @@ router.post("/signout", othersController.signout.post);
 router.post("/comments", othersController.commentPost.post);
 
 // 게시글 정보 요청 (게시글 상세 페이지)
-router.get("/contentDetail", othersController.contentDetail.get);
+router.post("/contentDetail", othersController.contentDetail.post);
 
 module.exports = router;

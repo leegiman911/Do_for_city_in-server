@@ -2,11 +2,11 @@ const db = require("../../models");
 module.exports = {
   // 게시글 검색 요청
   // 클라이언트 측에서 body의 data에(axios get요청) title을 담아 GET요청
-  get: (req, res) => {
+  post: (req, res) => {
     if (req.session.session_id) {
       db.Contents.findAll({
         where: {
-          title: req.body.data.title,
+          title: req.body.title,
         },
         attributes: ["title", "content", "createdAt"],
         include: [
